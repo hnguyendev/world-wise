@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-white h-full;
+}
+
+html {
+  @apply h-full;
+}
+
+#root {
+  @apply h-full;
+}
+
+.active {
+  @apply text-green-400;
+}
+
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    @apply hidden;
+  }
+}
