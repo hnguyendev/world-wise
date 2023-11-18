@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Product from "./pages/Product";
 import Pricing from "./pages/Pricing";
@@ -7,7 +11,7 @@ import AppLayout from "./pages/AppLayout";
 import PageNotFound from "./pages/PageNotFound";
 import CountryList from "./components/CountryList";
 import CityList from "./components/CityList";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import City from "./components/City";
 
 const router = createBrowserRouter([
   { path: "/", element: <Homepage /> },
@@ -19,11 +23,14 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       {
+        index: true,
+        element: <Navigate replace to="cities" />,
+      },
+      {
         path: "cities",
         element: <CityList />,
-
-        index: true,
       },
+      { path: `cities/:id`, element: <City /> },
       { path: "countries", element: <CountryList /> },
     ],
   },
@@ -33,20 +40,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 0,
-    },
-  },
-});
-
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />;
-    </QueryClientProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

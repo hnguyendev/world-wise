@@ -31,8 +31,6 @@ const CityList = () => {
 
   if (isLoading) return <Spinner />;
 
-  console.log(cities);
-
   return (
     <ul className="flex flex-col gap-6 w-full h-[65vh] overflow-y-auto overflow-x-hidden scrollbar">
       {cities.map((city: city) => (

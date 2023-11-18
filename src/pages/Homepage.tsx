@@ -22,7 +22,7 @@ const Homepage = () => {
         </h2>
         <Link
           className="bg-green-500 px-6 py-4 rounded-md text-black text-lg uppercase transition hover:bg-green-600"
-          to="/login"
+          to="/app"
         >
           Start tracking now
         </Link>
