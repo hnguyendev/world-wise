@@ -12,6 +12,7 @@ import PageNotFound from "./pages/PageNotFound";
 import CountryList from "./components/CountryList";
 import CityList from "./components/CityList";
 import City from "./components/City";
+import Form from "./components/Form";
 
 const router = createBrowserRouter([
   { path: "/", element: <Homepage /> },
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
       },
       { path: `cities/:id`, element: <City /> },
       { path: "countries", element: <CountryList /> },
+      { path: "form", element: <Form /> },
     ],
   },
   {

@@ -1,8 +1,19 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
+import { useEffect, useState } from "react";
 import useCities from "../hooks/useCities";
 import Spinner from "./Spinner";
+import useUrlPosition from "../hooks/useUrlPosition";
+import { LatLngExpression, LeafletMouseEvent } from "leaflet";
+import { FC } from "react";
+import { useNavigate } from "react-router-dom";
+import { useGeolocation } from "../hooks/useGeolocation";
 
 interface city {
   id: string;
@@ -18,33 +29,40 @@ interface city {
 }
 
 const Map = () => {
-  const [searchParams] = useSearchParams();
   const { data: cities, isLoading } = useCities();
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
-  const [mapPosition, setMapPosition] = useState(undefined);
+  const [mapPosition, setMapPosition] = useState<LatLngExpression>([
+    51.505, -0.09,
+  ]);
+  const [lat, lng] = useUrlPosition();
+  const {
+    isLoading: isLoadingPosition,
+    position: geolocationPosition,
+    getPosition,
+  } = useGeolocation(null);
+
+  useEffect(() => {
+    if (geolocationPosition)
+      setMapPosition([geolocationPosition.lat, geolocationPosition.lng]);
+  }, [geolocationPosition]);
+
+  useEffect(() => {
+    if (lat && lng) setMapPosition([lat, lng]);
+  }, [lat, lng]);
 
   if (isLoading) return <Spinner />;
 
   return (
     <div className="h-full bg-gray-600 relative flex-1 z-10">
-      {/* <MapContainer
-        center={[51.505, -0.09]}
-        scrollWheelZoom={true}
-        style={{ height: "100%" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer> */}
+      {!geolocationPosition && (
+        <button
+          onClick={getPosition}
+          className="absolute left-1/2 bottom-5 z-[1000] -translate-x-1/2 px-4 py-2 uppercase bg-green-400 rounded-md"
+        >
+          {isLoadingPosition ? "Loading..." : "Get current position"}
+        </button>
+      )}
       <MapContainer
-        center={[51.505, -0.09]}
+        center={mapPosition}
         zoom={13}
         scrollWheelZoom={true}
         className="h-full w-full"
@@ -61,9 +79,41 @@ const Map = () => {
             <Popup>{city.cityName}</Popup>
           </Marker>
         ))}
+        <ChangCenter position={mapPosition} />
+        <Resize />
+        <DetectClick />
       </MapContainer>
     </div>
   );
+};
+
+function Resize() {
+  const map = useMap();
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 50);
+
+  return null;
+}
+
+function DetectClick() {
+  const navigate = useNavigate();
+  useMapEvents({
+    click: (e: LeafletMouseEvent) =>
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
+  });
+
+  return null;
+}
+
+interface ChangCenterProps {
+  position: LatLngExpression;
+}
+
+const ChangCenter: FC<ChangCenterProps> = ({ position }) => {
+  const map = useMap();
+  map.setView(position);
+  return null;
 };
 
 export default Map;
