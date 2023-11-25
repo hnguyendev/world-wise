@@ -5,7 +5,7 @@ const Homepage = () => {
   return (
     <main
       className="h-full px-20 py-10 bg-cover bg-center
-      bg-[linear-gradient(rgba(49,84,44,0.8),rgba(16,71,52,0.8)),url('bg.jpg')]
+      bg-[linear-gradient(rgba(49,84,44,0.8),rgba(16,71,52,0.8)),url('/bg.jpg')]
     "
     >
       <PageNav />

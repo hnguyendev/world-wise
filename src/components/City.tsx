@@ -1,7 +1,7 @@
 import { FC } from "react";
-import useCity from "../hooks/useCity";
 import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
+import useCity from "../hooks/useCity";
 
 const formatDate = (date: string) =>
   new Intl.DateTimeFormat("en", {

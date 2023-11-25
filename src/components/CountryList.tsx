@@ -17,7 +17,10 @@ const CountryList = () => {
 
   const countries = data.reduce((arr: city[], city: city) => {
     if (!arr.map((el) => el.country).includes(city.country))
-      return [...arr, { country: city.country, emoji: city.emoji }];
+      return [
+        ...arr,
+        { country: city.country, emoji: city.emoji, id: city.id },
+      ];
     else return arr;
   }, []);
 

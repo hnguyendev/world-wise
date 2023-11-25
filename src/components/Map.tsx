@@ -6,12 +6,12 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
+import Leaflet from "leaflet";
 import { useEffect, useState } from "react";
 import useCities from "../hooks/useCities";
 import Spinner from "./Spinner";
 import useUrlPosition from "../hooks/useUrlPosition";
 import { LatLngExpression, LeafletMouseEvent } from "leaflet";
-import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGeolocation } from "../hooks/useGeolocation";
 
@@ -29,6 +29,10 @@ interface city {
 }
 
 const Map = () => {
+  const corner1 = Leaflet.latLng(-90, -190);
+  const corner2 = Leaflet.latLng(90, 190);
+  const bounds = Leaflet.latLngBounds(corner1, corner2);
+
   const { data: cities, isLoading } = useCities();
   const [mapPosition, setMapPosition] = useState<LatLngExpression>([
     51.505, -0.09,
@@ -63,8 +67,11 @@ const Map = () => {
       )}
       <MapContainer
         center={mapPosition}
-        zoom={13}
+        zoom={6}
         scrollWheelZoom={true}
+        minZoom={2}
+        maxBounds={bounds}
+        maxBoundsViscosity={1}
         className="h-full w-full"
       >
         <TileLayer
@@ -106,14 +113,10 @@ function DetectClick() {
   return null;
 }
 
-interface ChangCenterProps {
-  position: LatLngExpression;
-}
-
-const ChangCenter: FC<ChangCenterProps> = ({ position }) => {
+function ChangCenter({ position }: { position: LatLngExpression }) {
   const map = useMap();
   map.setView(position);
   return null;
-};
+}
 
 export default Map;

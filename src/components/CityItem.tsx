@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { MdOutlineClear } from "react-icons/md";
 import useDeleteCity from "../hooks/useDeleteCity";
 import Spinner from "./Spinner";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface CityItemProps {
   city: {
@@ -43,7 +43,10 @@ const CityItem: FC<CityItemProps> = ({ city }) => {
       <h3 className="text-lg font-semibold mr-auto">{cityName}</h3>
       <time className="">({formatDate(date)})</time>
       <button
-        onClick={() => deleteCity(id)}
+        onClick={(e) => {
+          e.preventDefault();
+          deleteCity(id);
+        }}
         className="bg-black w-6 h-6 rounded-full flex items-center justify-center transition hover:bg-orange-500"
       >
         <MdOutlineClear />

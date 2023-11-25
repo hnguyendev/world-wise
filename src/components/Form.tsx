@@ -1,10 +1,14 @@
-import { FC, useState } from "react";
-import { Form as FormComponent, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import useFetchCity from "../hooks/useFetchCity";
 import Spinner from "./Spinner";
 import Message from "./Message";
+import useUrlPosition from "../hooks/useUrlPosition";
+import useCreateCity from "../hooks/useCreateCity";
 
-export function convertToEmoji(countryCode: string) {
+function convertToEmoji(countryCode: string) {
   const codePoints = countryCode
     .toUpperCase()
     .split("")
@@ -12,25 +16,53 @@ export function convertToEmoji(countryCode: string) {
   return String.fromCodePoint(...codePoints);
 }
 
-interface FormProps {}
-
-const Form: FC<FormProps> = () => {
-  const [cityName, setCityName] = useState("");
-  const [date, setDate] = useState("");
-  const [notes, setNotes] = useState("");
-  const navigate = useNavigate();
+const Form = () => {
   const { isLoading, error, data } = useFetchCity();
+  const [cityName, setCityName] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [notes, setNotes] = useState("");
+
+  const [lat, lng] = useUrlPosition();
+  const navigate = useNavigate();
+  const { isPending, mutate } = useCreateCity();
+
+  useEffect(() => {
+    setCityName(data?.city || data?.locality || "");
+  }, [data?.city, data?.locality]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!cityName || !date) return;
+
+    const newCity = {
+      cityName,
+      country: data?.countryName,
+      emoji: convertToEmoji(data?.countryCode),
+      date,
+      notes,
+      position: { lat, lng },
+    };
+
+    mutate(newCity);
+
+    return navigate("/app/cities");
+  }
 
   if (isLoading) return <Spinner />;
 
-  if (error) return <Message message="Doesn't look like a city" />;
+  if (error)
+    return (
+      <Message
+        message="🙌 Doesn't look like a city.
+      Expecting latitude in (+/- 90) and longitude in (+/- 180)"
+      />
+    );
 
-  console.log(data);
   // const { city, countryName, countryCode, locality } = data;
 
   return (
-    <FormComponent
-      method="POST"
+    <form
+      onSubmit={handleSubmit}
       className="bg-gray-600 rounded-md px-5 py-6 w-full flex flex-col gap-8"
     >
       <div className="flex flex-col gap-2 relative">
@@ -39,7 +71,7 @@ const Form: FC<FormProps> = () => {
           className="w-full rounded-md px-4 py-2 text-black"
           name="cityName"
           type="text"
-          value={data?.city || data?.locality || cityName}
+          value={cityName}
           onChange={(e) => setCityName(e.target.value)}
         />
         <span className="absolute right-4 top-1/2 text-2xl">
@@ -48,12 +80,12 @@ const Form: FC<FormProps> = () => {
       </div>
       <div className="flex flex-col gap-2 relative">
         <label>When did you go to X ?</label>
-        <input
+        <DatePicker
           className="w-full rounded-md px-4 py-2 text-black"
-          name="date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          id="date"
+          selected={date}
+          dateFormat="dd/MM/yyyy"
+          onChange={(date) => setDate(date as Date)}
         />
       </div>
       <div className="flex flex-col gap-2 relative">
@@ -68,9 +100,7 @@ const Form: FC<FormProps> = () => {
       </div>
       <div className="flex justify-between items-center">
         <button
-          onClick={(e) => {
-            e.preventDefault();
-          }}
+          disabled={isPending}
           className="bg-green-400 w-20 px-4 py-2 rounded-md flex items-center justify-center"
         >
           ADD
@@ -85,7 +115,7 @@ const Form: FC<FormProps> = () => {
           BACK
         </button>
       </div>
-    </FormComponent>
+    </form>
   );
 };
 

@@ -8,6 +8,7 @@ const useFetchCity = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["city-form", lat, lng],
     queryFn: () => fetchCityData(lat, lng),
+    retry: false,
   });
 
   return { isLoading, error, data };
