@@ -53,7 +53,12 @@ const Map = () => {
     if (lat && lng) setMapPosition([lat, lng]);
   }, [lat, lng]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="h-full bg-gray-600 relative flex-1 z-10">

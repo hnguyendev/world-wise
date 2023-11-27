@@ -71,6 +71,30 @@
         "lng": 16.935105080172796
       },
       "id": 98443200
+    },
+    {
+      "cityName": "Casillas de Flores",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2023-11-27T17:30:08.618Z",
+      "notes": "xdd",
+      "position": {
+        "lat": 40.377489772710625,
+        "lng": -6.751737746809486
+      },
+      "id": 98443201
+    },
+    {
+      "cityName": "Bitterfeld-Wolfen",
+      "country": "Germany",
+      "emoji": "🇩🇪",
+      "date": "2023-11-27T17:36:09.628Z",
+      "notes": "xdd",
+      "position": {
+        "lat": 51.62847695118915,
+        "lng": 12.301078398850423
+      },
+      "id": 98443202
     }
   ]
 }

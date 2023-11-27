@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { MdOutlineClear } from "react-icons/md";
 import useDeleteCity from "../hooks/useDeleteCity";
 import Spinner from "./Spinner";
