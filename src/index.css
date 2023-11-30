@@ -26,17 +26,18 @@ html {
   }
 }
 
-.leaflet-popup,
-.leaflet-popup-content-wrapper {
-  background-color: var(--color-dark--1);
-  color: var(--color-light--2);
-  border-radius: 5px;
-  padding-right: 0.6rem;
+.leaflet-popup .leaflet-popup-content-wrapper {
+  @apply bg-gray-800 rounded-md pr-2 text-white;
 }
-.leaflet-popup,
-.leaflet-popup-content {
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+
+.leaflet-popup .leaflet-popup-content {
+  @apply flex items-center gap-2 text-lg;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+  @apply bg-green-400;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply border-l-4 border-green-400;
 }

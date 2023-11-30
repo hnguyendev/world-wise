@@ -3,7 +3,6 @@ import React, { FC } from "react";
 interface InputProps {
   id: string;
   type?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string;
   label: string;

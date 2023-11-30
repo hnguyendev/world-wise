@@ -1,6 +1,5 @@
-import { FC } from "react";
 import Spinner from "./Spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useCity from "../hooks/useCity";
 
 const formatDate = (date: string) =>
@@ -11,10 +10,9 @@ const formatDate = (date: string) =>
     weekday: "long",
   }).format(new Date(date));
 
-interface CityProps {}
-
-const City: FC<CityProps> = () => {
-  const { data: city, isFetching } = useCity();
+const City = () => {
+  const { id } = useParams();
+  const { data: city, isFetching } = useCity(id as string);
   const navigate = useNavigate();
 
   if (isFetching) return <Spinner />;
@@ -22,8 +20,8 @@ const City: FC<CityProps> = () => {
   const { cityName, emoji, date, notes } = city;
 
   return (
-    <div className="bg-gray-600 px-8 py-6 w-full rounded-lg flex flex-col gap-6">
-      <div className="">
+    <div className="bg-gray-600 px-8 py-6 w-full rounded-lg flex flex-col gap-6 drop-shadow-lg">
+      <div className="flex flex-col gap-2">
         <h6 className="uppercase text-xs font-medium text-neutral-300">
           City name
         </h6>

@@ -1,12 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCity } from "../services/apiCities";
-import { useParams } from "react-router-dom";
 
-const useCity = () => {
-  const { id } = useParams();
+const useCity = (id: string) => {
   const { data, isFetching, error } = useQuery({
-    queryKey: ["city"],
-    queryFn: () => getCity(id as string),
+    queryKey: ["city", id],
+    queryFn: () => (id ? getCity(id) : null),
   });
 
   return { data, isFetching, error };

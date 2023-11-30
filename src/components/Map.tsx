@@ -55,7 +55,7 @@ const Map = () => {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center">
+      <div className="h-full w-full flex items-center justify-center">
         <Spinner />
       </div>
     );
@@ -88,7 +88,9 @@ const Map = () => {
             key={city.id}
             position={[city.position.lat, city.position.lng]}
           >
-            <Popup>{city.cityName}</Popup>
+            <Popup>
+              <span>{city.emoji}</span> {city.cityName}
+            </Popup>
           </Marker>
         ))}
         <ChangCenter position={mapPosition} />
