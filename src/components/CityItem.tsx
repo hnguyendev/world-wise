@@ -2,6 +2,7 @@ import { FC } from "react";
 import { MdOutlineClear } from "react-icons/md";
 import { Link } from "react-router-dom";
 import useModal from "../hooks/useModal";
+import useActive from "../hooks/useActive";
 
 interface CityItemProps {
   city: {
@@ -28,12 +29,14 @@ const formatDate = (date: string) =>
 const CityItem: FC<CityItemProps> = ({ city }) => {
   const { id, cityName, position, date, emoji } = city;
   const { openModal } = useModal();
+  const { cityId, setActive } = useActive();
 
   return (
     <Link
+      onClick={() => setActive(id)}
       to={`${id}?lat=${position.lat}&lng=${position?.lng}`}
       className={`bg-gray-600 rounded-md px-4 py-2 flex items-center gap-6 cursor-pointer transition hover:bg-opacity-60 ${
-        id ? "border-l-4" : "border-l-4"
+        cityId === id ? "border-4" : "border-l-4"
       } border-green-500 drop-shadow-md`}
     >
       <span className="text-2xl">{emoji}</span>
